@@ -1,0 +1,63 @@
+:root {
+  --vertical-bar-width: 0.2em;
+  --icon-width: 1.8em;
+  --padding: 0.2em;
+  --unfocused-entry-background: #323232;
+  --unfocused-entry-text: #aaa;
+  --focused-entry-background: #5050;
+  --focused-entry-text: #aaa;
+  --focused-entry-focused-input-background: #222;
+}
+
+.entry {
+  grid-template-columns: var(--vertical-bar-width) var(--icon-width) auto;
+  grid-template-rows: 50% 50%;
+  margin: 0.2em;
+  padding: var(--padding);
+  background-color: #323232;
+  color: var(--unfocused-entry-text);
+  display: grid;
+}
+
+.entry input,
+.entry textarea {
+  font-size: 1em;
+  padding: 0.2em;
+  background-color : var(--unfocused-entry-background);
+  color: var(--unfocused-entry-text);
+  border: 0px solid;
+}
+
+.entry-focused input { background-color : var(--focused-entry-background); }
+
+.entry input:focus,
+.entry textarea {
+  background-color : var(--focused-entry-focused-input-background);
+  color: var(--unfocused-entry-text);
+  border: solid 1px yellow;
+}
+
+.entry-focused { background-color: #505050; }
+
+.vertical-bar {
+  grid-row: 1 3;
+  background-color: red;
+}
+
+.icon {
+  grid-row: 1 3;
+  place-self: center;
+  /* background-color: yellow; */
+}
+
+.description {
+  text-align: left;
+  grid-row: 1 2;
+  /* background-color: #ccc; */
+}
+
+.details {
+  text-align: left;
+  grid-row: 2 3;
+  /* background-color: #fca; */
+}
