@@ -1,5 +1,12 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "rulesDirectory": ["./src/"],
+  "rules": {
+    "eofline": true,
+    "max-line-length": {
+      "options": [120]
+    }
+  },
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
