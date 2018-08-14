@@ -5,7 +5,24 @@
     "eofline": true,
     "max-line-length": {
       "options": [120]
-    }
+    },
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "public-static-field",
+          "public-instance-field",
+          "private-static-field",
+          "private-instance-field",
+          "public-constructor",
+          "private-constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
+        ]
+      }
+    ],
+    "object-literal-sort-keys": false
   },
   "linterOptions": {
     "exclude": [
