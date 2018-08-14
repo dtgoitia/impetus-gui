@@ -1,8 +1,22 @@
 import * as React from 'react';
 import Entry from './Entry';
 
+interface IWorkEntry {
+  indentation: number;
+  type: "work";
+  description: string;
+  time: number;
+}
+
 class Preset extends React.Component<any, any> {
-  constructor(props: any) {
+  private readonly DEFAULT_WORK_ENTRY: IWorkEntry = {
+    description: 'Ascend',
+    indentation: 0,
+    time: 25000,
+    type: 'work'
+  };
+
+  public constructor(props: any) {
     super(props);
     this.state = {
       data: [
@@ -20,8 +34,8 @@ class Preset extends React.Component<any, any> {
 
     this.FocusUp = this.FocusUp.bind(this);
     this.FocusDown = this.FocusDown.bind(this);
-    this.indentEntry = this.indentEntry.bind(this);
-    this.unindentEntry = this.unindentEntry.bind(this);
+    this.IndentEntry = this.IndentEntry.bind(this);
+    this.UnindentEntry = this.UnindentEntry.bind(this);
     this.HandleKey = this.HandleKey.bind(this);
   }
 
@@ -33,11 +47,6 @@ class Preset extends React.Component<any, any> {
     document.removeEventListener("keydown", this.HandleKey);
   }
 
-  // public render() {
-  //   return (
-  //     <div>Preset</div>
-  //   );
-  // }
   public render() {
     const entries = this.state.data
       .map((x: any, i: number) => {
@@ -49,9 +58,15 @@ class Preset extends React.Component<any, any> {
         )
       });
     
-      return <div className="App" onKeyPress={this.HandleKey}>{entries}</div>;
+      return <div className="preset" onKeyPress={this.HandleKey}>{entries}</div>;
   }
 
+  private AddEntry(): any {
+    const newEntry: IWorkEntry = this.DEFAULT_WORK_ENTRY;
+    const currentData = this.state.data;
+    currentData.push(newEntry);
+    this.setState({data: currentData});
+  }
 
   private FocusUp() {
     const newFocusEntry = this.state.focusEntry - 1;
@@ -66,7 +81,7 @@ class Preset extends React.Component<any, any> {
       this.setState({focusEntry: newFocusEntry});
     }
   }
-  private indentEntry() {
+  private IndentEntry() {
     const currentData = this.state.data;
     const newIndentation = currentData[this.state.focusEntry].indentation - 1;
     if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
@@ -74,7 +89,7 @@ class Preset extends React.Component<any, any> {
       this.setState({data: currentData});
     }
   }
-  private unindentEntry() {
+  private UnindentEntry() {
     const currentData = this.state.data;
     const newIndentation = currentData[this.state.focusEntry].indentation + 1;
     if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
@@ -89,18 +104,19 @@ class Preset extends React.Component<any, any> {
       : this.setState({editEntry: null})
   }
 
-  private stopEditing() {
+  private StopEditing() {
     if (this.state.editEntry !== null) {this.setState({editEntry: null})};
   }
 
   private HandleKey(e: { keyCode: any; }) {
+    // tslint:disable-next-line:no-console
     // console.log(e.keyCode);
     switch (e.keyCode) {
       case 37:
       case 72:
         // if (e.ctrlKey) {console.log('Ctrl!')};
         if (this.state.editEntry !== null) {break};
-        this.indentEntry(); break;
+        this.IndentEntry(); break;
       case 38:
       case 75:
         // if (e.ctrlKey) console.log('Ctrl!');
@@ -110,7 +126,7 @@ class Preset extends React.Component<any, any> {
       case 76:
         // if (e.ctrlKey) console.log('Ctrl!');
         if (this.state.editEntry !== null) {break};
-        this.unindentEntry(); break;
+        this.UnindentEntry(); break;
       case 40:
       case 74:
         // if (e.ctrlKey) {console.log('Ctrl!')};
@@ -124,7 +140,9 @@ class Preset extends React.Component<any, any> {
       case 13: // ENTER
         this.ToggleEditDescription(); break;
       case 27: // Escape
-        this.stopEditing(); break;
+        this.StopEditing(); break;
+      case 107: // +
+        this.AddEntry(); break;
       default:
         // console.log(e.keyCode);
         break;
