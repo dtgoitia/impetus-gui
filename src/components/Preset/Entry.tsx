@@ -25,7 +25,10 @@ class Entry extends React.Component<any, any> {
       <div className={`entry${this.props.focus ? ' entry-focused' : ''}`}
         style={{ width: "400px", marginLeft: `${2 * this.props.data.indentation}em` }}
       >
-        <div className="vertical-bar" style={{ backgroundColor: this.GetColorFromType(this.state.type) }}>&nbsp;</div>
+        <div
+          className="vertical-bar"
+          style={{ backgroundColor: this.GetColorFromType(this.props.data.type) }}
+        >&nbsp;</div>
         <div className="icon">{this.props.data.icon}</div>
         <div className="data">
           <div className="description">

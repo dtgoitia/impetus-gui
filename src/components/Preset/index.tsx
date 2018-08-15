@@ -1,32 +1,41 @@
 import * as React from 'react';
 import Entry from './Entry';
+import { EntryType } from './EntryType';
+import { IEntry, ILoopEntry, IWorkRestEntry } from './IEntry';
 
-interface IWorkEntry {
-  indentation: number;
-  type: "work";
-  description: string;
-  time: number;
-}
 
 class Preset extends React.Component<any, any> {
-  private readonly DEFAULT_WORK_ENTRY: IWorkEntry = {
-    description: 'Ascend',
+
+  private readonly DEFAULT_LOOP_ENTRY: ILoopEntry = {
+    description: 'Loop',
+    indentation: 0,
+    rounds: 3,
+    type: EntryType.Loop
+  };
+  private readonly DEFAULT_REST_ENTRY: IWorkRestEntry = {
+    description: 'Rest',
     indentation: 0,
     time: 25000,
-    type: 'work'
+    type: EntryType.Rest
+  };
+  private readonly DEFAULT_WORK_ENTRY: IWorkRestEntry = {
+    description: 'Work',
+    indentation: 0,
+    time: 35000,
+    type: EntryType.Work
   };
 
   public constructor(props: any) {
     super(props);
     this.state = {
       data: [
-        { indentation: 0, type: 'work', description: 'Ascend', time: 25000 },
-        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3 },
-        { indentation: 1, type: 'work', description: 'Ascend', time: 25000 },
-        { indentation: 1, type: 'rest', description: 'Low',    time: 90000 },
-        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 2 },
-        { indentation: 1, type: 'work', description: 'Ascend', time: 25000 },
-        { indentation: 1, type: 'rest', description: 'Low',    time: 90000 }
+        // { indentation: 0, type: 'work', description: 'Ascend', time: 25000 },
+        // { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3 },
+        // { indentation: 1, type: 'work', description: 'Ascend', time: 25000 },
+        // { indentation: 1, type: 'rest', description: 'Low',    time: 90000 },
+        // { indentation: 0, type: 'loop', description: 'Warmup', rounds: 2 },
+        // { indentation: 1, type: 'work', description: 'Ascend', time: 25000 },
+        // { indentation: 1, type: 'rest', description: 'Low',    time: 90000 }
       ],
       editEntry: null,
       focusEntry: 0
@@ -50,7 +59,7 @@ class Preset extends React.Component<any, any> {
 
   public render() {
     const entries = this.state.data
-      .map((x: any, i: number) => {
+      .map((x: IEntry, i: number) => {
         return (
           <Entry key={i} id={i} data={x}
             focus={i === this.state.focusEntry}
@@ -63,15 +72,21 @@ class Preset extends React.Component<any, any> {
     return <div className="preset" onKeyPress={this.HandleKey}>{entries}</div>;
   }
 
-  private AddEntry(): any {
-    const newEntry: IWorkEntry = this.DEFAULT_WORK_ENTRY;
+  private AddEntry(entryType: string = EntryType.Work): void {
+    let newEntry: IEntry;
+    switch (entryType) {
+      case EntryType.Loop: { newEntry = this.DEFAULT_LOOP_ENTRY; break; }
+      case EntryType.Rest: { newEntry = this.DEFAULT_REST_ENTRY; break; }
+      case EntryType.Work: { newEntry = this.DEFAULT_WORK_ENTRY; break; }
+      default: { newEntry = this.DEFAULT_WORK_ENTRY; break; }
+    }
     const currentData = this.state.data;
     const insertIndex: number = this.state.focusEntry + 1;
     currentData.splice(insertIndex, 0, newEntry)
     this.setState({ data: currentData });
   }
 
-  private FocusDown() {
+  private FocusDown(): void {
     const newFocusEntry = this.state.focusEntry + 1;
     if (this.ValidateNewFocusEntry(newFocusEntry)) {
       this.setState({ focusEntry: newFocusEntry });
@@ -118,6 +133,16 @@ class Preset extends React.Component<any, any> {
         this.ToggleEditDescription(); break;
       case 27: // Escape
         this.StopEditing(); break;
+
+      case 49: // 1 (above keyboard)
+      case 97: // 1 (right keyboard)
+        this.AddEntry(EntryType.Loop); break;
+      case 50: // 2 (above keyboard)
+      case 98: // 2 (right keyboard)
+        this.AddEntry(EntryType.Work); break;
+      case 51: // 3 (above keyboard)
+      case 99: // 3 (right keyboard)
+        this.AddEntry(EntryType.Rest); break;
       case 107: // +
         this.AddEntry(); break;
       case 109: // -

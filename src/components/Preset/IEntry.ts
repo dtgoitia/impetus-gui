@@ -1,6 +1,12 @@
-export default interface IEntry {
+export interface IEntry {
+  description: string;
+  indentation: number;
   type: string;
-  rounds?: number;
-  time?: number;
-  [x: string]: any
+}
+export interface ILoopEntry extends IEntry {
+  rounds: number;
+}
+
+export interface IWorkRestEntry extends IEntry {
+  time: number;
 }
