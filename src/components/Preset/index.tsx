@@ -68,6 +68,13 @@ class Preset extends React.Component<any, any> {
     this.setState({data: currentData});
   }
 
+  private FocusDown() {
+    const newFocusEntry = this.state.focusEntry + 1;
+    if (this.ValidateNewFocusEntry(newFocusEntry)) {
+      this.setState({focusEntry: newFocusEntry});
+    }
+  }
+
   private FocusUp() {
     const newFocusEntry = this.state.focusEntry - 1;
     if (this.ValidateNewFocusEntry(newFocusEntry)) {
@@ -75,38 +82,16 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private FocusDown() {
-    const newFocusEntry = this.state.focusEntry + 1;
-    if (this.ValidateNewFocusEntry(newFocusEntry)) {
-      this.setState({focusEntry: newFocusEntry});
-    }
-  }
   private IndentEntry() {
-    const currentData = this.state.data;
-    const newIndentation = currentData[this.state.focusEntry].indentation - 1;
-    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
-      currentData[this.state.focusEntry].indentation = newIndentation;
-      this.setState({data: currentData});
+      const currentData = this.state.data;
+      const newIndentation = currentData[this.state.focusEntry].indentation - 1;
+      if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
+        currentData[this.state.focusEntry].indentation = newIndentation;
+        this.setState({data: currentData});
+      }
     }
-  }
-  private UnindentEntry() {
-    const currentData = this.state.data;
-    const newIndentation = currentData[this.state.focusEntry].indentation + 1;
-    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
-      currentData[this.state.focusEntry].indentation = newIndentation;
-      this.setState({data: currentData});
-    }
-  }
 
-  private ToggleEditDescription() {
-    this.state.editEntry === null
-      ? this.setState({editEntry: this.state.focusEntry})
-      : this.setState({editEntry: null})
-  }
-
-  private StopEditing() {
-    if (this.state.editEntry !== null) {this.setState({editEntry: null})};
-  }
+  
 
   private HandleKey(e: { keyCode: any; }) {
     // tslint:disable-next-line:no-console
@@ -116,7 +101,7 @@ class Preset extends React.Component<any, any> {
       case 72:
         // if (e.ctrlKey) {console.log('Ctrl!')};
         if (this.state.editEntry !== null) {break};
-        this.IndentEntry(); break;
+        this.UnindentEntry(); break;
       case 38:
       case 75:
         // if (e.ctrlKey) console.log('Ctrl!');
@@ -126,7 +111,7 @@ class Preset extends React.Component<any, any> {
       case 76:
         // if (e.ctrlKey) console.log('Ctrl!');
         if (this.state.editEntry !== null) {break};
-        this.UnindentEntry(); break;
+        this.IndentEntry(); break;
       case 40:
       case 74:
         // if (e.ctrlKey) {console.log('Ctrl!')};
@@ -146,6 +131,25 @@ class Preset extends React.Component<any, any> {
       default:
         // console.log(e.keyCode);
         break;
+    }
+  }
+
+  private StopEditing() {
+    if (this.state.editEntry !== null) {this.setState({editEntry: null})};
+  }
+
+  private ToggleEditDescription() {
+    this.state.editEntry === null
+      ? this.setState({editEntry: this.state.focusEntry})
+      : this.setState({editEntry: null})
+  }
+
+  private UnindentEntry() {
+    const currentData = this.state.data;
+    const newIndentation = currentData[this.state.focusEntry].indentation + 1;
+    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
+      currentData[this.state.focusEntry].indentation = newIndentation;
+      this.setState({data: currentData});
     }
   }
 
