@@ -37,6 +37,7 @@ class Preset extends React.Component<any, any> {
     this.IndentEntry = this.IndentEntry.bind(this);
     this.UnindentEntry = this.UnindentEntry.bind(this);
     this.HandleKey = this.HandleKey.bind(this);
+    this.HandleEntryDescriptionUpdate = this.HandleEntryDescriptionUpdate.bind(this);
   }
 
   public componentWillMount() {
@@ -54,11 +55,12 @@ class Preset extends React.Component<any, any> {
           <Entry key={i} id={i} data={x}
             focus={i === this.state.focusEntry}
             focusDescription={i === this.state.editEntry}
+            descriptionHandler={this.HandleEntryDescriptionUpdate}
           />
         )
       });
-    
-      return <div className="preset" onKeyPress={this.HandleKey}>{entries}</div>;
+
+    return <div className="preset" onKeyPress={this.HandleKey}>{entries}</div>;
   }
 
   private AddEntry(): any {
@@ -94,7 +96,7 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  
+
 
   private HandleKey(e: { keyCode: any; }) {
     // tslint:disable-next-line:no-console
@@ -102,23 +104,23 @@ class Preset extends React.Component<any, any> {
     switch (e.keyCode) {
       case 37:
       case 72:
-        // if (e.ctrlKey) {console.log('Ctrl!')};
-        if (this.state.editEntry !== null) {break};
-        this.UnindentEntry(); break;
-      case 38:
-      case 75:
-        // if (e.ctrlKey) console.log('Ctrl!');
-        if (this.state.editEntry !== null) {break};
-        this.FocusUp(); break;
-      case 39:
-      case 76:
-        // if (e.ctrlKey) console.log('Ctrl!');
-        if (this.state.editEntry !== null) {break};
-        this.IndentEntry(); break;
-      case 40:
-      case 74:
-        // if (e.ctrlKey) {console.log('Ctrl!')};
-        if (this.state.editEntry !== null) {break};
+      // if (e.ctrlKey) {console.log('Ctrl!')};
+      if (this.state.editEntry !== null) {break};
+      this.UnindentEntry(); break;
+    case 38:
+    case 75:
+      // if (e.ctrlKey) console.log('Ctrl!');
+      if (this.state.editEntry !== null) {break};
+      this.FocusUp(); break;
+    case 39:
+    case 76:
+      // if (e.ctrlKey) console.log('Ctrl!');
+      if (this.state.editEntry !== null) {break};
+      this.IndentEntry(); break;
+    case 40:
+    case 74:
+      // if (e.ctrlKey) {console.log('Ctrl!')};
+      if (this.state.editEntry !== null) {break};
         this.FocusDown(); break;
       // case 32: // SPACE
       //   if (this.state.editEntry !== null) break;
@@ -131,10 +133,28 @@ class Preset extends React.Component<any, any> {
         this.StopEditing(); break;
       case 107: // +
         this.AddEntry(); break;
+      case 109: // -
+        this.RemoveEntry(); break;
       default:
+        // tslint:disable-next-line:no-console
         // console.log(e.keyCode);
         break;
     }
+  }
+
+  private HandleEntryDescriptionUpdate(description: string) {
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const currentData = [...this.state.data];
+    const focusedEntry = currentData[focusedEntryIndex];
+    focusedEntry.description = description;
+    currentData.splice(focusedEntryIndex, 1, focusedEntry)
+    this.setState({ data: currentData });
+  }
+
+  private RemoveEntry(): any {
+    const currentData = [...this.state.data];
+    currentData.splice(this.state.focusEntry, 1);
+    this.setState({ data: currentData });
   }
 
   private StopEditing() {

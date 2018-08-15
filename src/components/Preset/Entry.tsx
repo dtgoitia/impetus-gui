@@ -26,10 +26,10 @@ class Entry extends React.Component<any, any> {
         style={{width: "400px", marginLeft: `${2 * this.props.data.indentation}em`}}
       >
         <div className="vertical-bar" style={{backgroundColor: this.GetColorFromType(this.state.type)}}>&nbsp;</div>
-        <div className="icon">{this.state.icon}</div>
+        <div className="icon">{this.props.data.icon}</div>
         <div className="data">
           <div className="description">
-            <input ref={this.textInput} type="text" value={this.state.description} onChange={this.handleChange} />
+            <input ref={this.textInput} type="text" value={this.props.data.description} onChange={this.handleChange} />
           </div>
           <div className="details">
             <Detail data={this.props.data} />
@@ -61,7 +61,8 @@ class Entry extends React.Component<any, any> {
   }
 
   private handleChange(event: any): void {
-    this.setState({description: event.target.value});
+    const updatedInputValue: string = event.target.value;
+    this.props.descriptionHandler(updatedInputValue);
   }
 
   private focusTextInput(): void {
