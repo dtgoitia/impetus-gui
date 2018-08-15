@@ -83,13 +83,16 @@ class Preset extends React.Component<any, any> {
   }
 
   private IndentEntry() {
-      const currentData = this.state.data;
-      const newIndentation = currentData[this.state.focusEntry].indentation - 1;
-      if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
-        currentData[this.state.focusEntry].indentation = newIndentation;
-        this.setState({data: currentData});
-      }
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const updatedData = this.state.data;
+    const updatedFocusedEntry = {...updatedData[focusedEntryIndex]};
+    const newIndentation = updatedFocusedEntry.indentation + 1;
+    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
+      updatedFocusedEntry.indentation = newIndentation;
+      updatedData.splice(focusedEntryIndex, 1, updatedFocusedEntry);
+      this.setState({data: updatedData});
     }
+  }
 
   
 
@@ -143,13 +146,15 @@ class Preset extends React.Component<any, any> {
       ? this.setState({editEntry: this.state.focusEntry})
       : this.setState({editEntry: null})
   }
-
   private UnindentEntry() {
-    const currentData = this.state.data;
-    const newIndentation = currentData[this.state.focusEntry].indentation + 1;
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const updatedData = this.state.data;
+    const updatedFocusedEntry = {...updatedData[focusedEntryIndex]};
+    const newIndentation = updatedFocusedEntry.indentation - 1;
     if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
-      currentData[this.state.focusEntry].indentation = newIndentation;
-      this.setState({data: currentData});
+      updatedFocusedEntry.indentation = newIndentation;
+      updatedData.splice(focusedEntryIndex, 1, updatedFocusedEntry);
+      this.setState({data: updatedData});
     }
   }
 
