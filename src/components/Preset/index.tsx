@@ -66,7 +66,8 @@ class Preset extends React.Component<any, any> {
   private AddEntry(): any {
     const newEntry: IWorkEntry = this.DEFAULT_WORK_ENTRY;
     const currentData = this.state.data;
-    currentData.push(newEntry);
+    const insertIndex: number = this.state.focusEntry + 1;
+    currentData.splice(insertIndex, 0, newEntry)
     this.setState({ data: currentData });
   }
 
@@ -84,41 +85,27 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private IndentEntry() {
-    const focusedEntryIndex: number = this.state.focusEntry;
-    const updatedData = this.state.data;
-    const updatedFocusedEntry = { ...updatedData[focusedEntryIndex] };
-    const newIndentation = updatedFocusedEntry.indentation + 1;
-    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
-      updatedFocusedEntry.indentation = newIndentation;
-      updatedData.splice(focusedEntryIndex, 1, updatedFocusedEntry);
-      this.setState({ data: updatedData });
-    }
-  }
-
-
-
   private HandleKey(e: { keyCode: any; }) {
     // tslint:disable-next-line:no-console
-    // console.log(e.keyCode);
+    console.log(e.keyCode);
     switch (e.keyCode) {
-      case 37:
-      case 72:
+      case 37:  // Left arrow
+      case 72:  // H
         // if (e.ctrlKey) {console.log('Ctrl!')};
         if (this.state.editEntry !== null) { break };
         this.UnindentEntry(); break;
-      case 38:
-      case 75:
+      case 38:  // Up arrow
+      case 75:  // K
         // if (e.ctrlKey) console.log('Ctrl!');
         if (this.state.editEntry !== null) { break };
         this.FocusUp(); break;
-      case 39:
-      case 76:
+      case 39:  // Right arrow
+      case 76:  // L
         // if (e.ctrlKey) console.log('Ctrl!');
         if (this.state.editEntry !== null) { break };
         this.IndentEntry(); break;
-      case 40:
-      case 74:
+      case 40:  // Down arrow
+      case 74:  // J
         // if (e.ctrlKey) {console.log('Ctrl!')};
         if (this.state.editEntry !== null) { break };
         this.FocusDown(); break;
@@ -149,6 +136,18 @@ class Preset extends React.Component<any, any> {
     focusedEntry.description = description;
     currentData.splice(focusedEntryIndex, 1, focusedEntry)
     this.setState({ data: currentData });
+  }
+
+  private IndentEntry() {
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const updatedData = this.state.data;
+    const updatedFocusedEntry = { ...updatedData[focusedEntryIndex] };
+    const newIndentation = updatedFocusedEntry.indentation + 1;
+    if (this.ValidateFocusEntryNewIndentation(newIndentation)) {
+      updatedFocusedEntry.indentation = newIndentation;
+      updatedData.splice(focusedEntryIndex, 1, updatedFocusedEntry);
+      this.setState({ data: updatedData });
+    }
   }
 
   private RemoveEntry(): any {
