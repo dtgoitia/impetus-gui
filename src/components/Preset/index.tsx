@@ -154,7 +154,7 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private HandleEntryDescriptionUpdate(description: string) {
+  private HandleEntryDescriptionUpdate(description: string): void {
     const focusedEntryIndex: number = this.state.focusEntry;
     const currentData = [...this.state.data];
     const focusedEntry = currentData[focusedEntryIndex];
@@ -163,7 +163,7 @@ class Preset extends React.Component<any, any> {
     this.setState({ data: currentData });
   }
 
-  private IndentEntry() {
+  private IndentEntry(): void {
     const focusedEntryIndex: number = this.state.focusEntry;
     const updatedData = this.state.data;
     const updatedFocusedEntry = { ...updatedData[focusedEntryIndex] };
@@ -175,7 +175,7 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private RemoveEntry(): any {
+  private RemoveEntry(): void {
     const currentData = [...this.state.data];
     currentData.splice(this.state.focusEntry, 1);
     this.setState({ data: currentData });
@@ -185,12 +185,12 @@ class Preset extends React.Component<any, any> {
     if (this.state.editEntry !== null) { this.setState({ editEntry: null }) };
   }
 
-  private ToggleEditDescription() {
+  private ToggleEditDescription(): void {
     this.state.editEntry === null
       ? this.setState({ editEntry: this.state.focusEntry })
       : this.setState({ editEntry: null })
   }
-  private UnindentEntry() {
+  private UnindentEntry(): void {
     const focusedEntryIndex: number = this.state.focusEntry;
     const updatedData = this.state.data;
     const updatedFocusedEntry = { ...updatedData[focusedEntryIndex] };
@@ -202,14 +202,14 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private ValidateNewFocusEntry(newFocusEntry: any) {
+  private ValidateNewFocusEntry(newFocusEntry: number): boolean {
     if (newFocusEntry < 0) { return false; }
     if (newFocusEntry > this.state.data.length - 1) { return false; }
     return true;
 
   }
 
-  private ValidateFocusEntryNewIndentation(newIndentation: any) {
+  private ValidateFocusEntryNewIndentation(newIndentation: number): boolean {
     if (newIndentation < 0) { return false; }
     return true;
   }

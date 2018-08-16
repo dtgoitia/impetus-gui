@@ -3,16 +3,21 @@ import Detail from './Detail';
 import './Entry.css';
 import { EntryBar } from './EntryBar';
 import EntryIcon from './EntryIcon';
+import { IEntry } from './IEntry';
 
-class Entry extends React.Component<any, any> {
+interface IEntryProps {
+  data: IEntry;
+  focus: boolean;
+  focusDescription: boolean;
+  id: number;
+  key: number;
+  descriptionHandler(description: string): void;
+}
+
+class Entry extends React.Component<IEntryProps, any> {
   public textInput: any;
-  constructor(props: any) {
+  constructor(props: IEntryProps) {
     super(props);
-    this.state = {
-      description: this.props.data.description,
-      icon: 'X', // loop, rest, work
-      type: this.props.data.type
-    };
 
     this.handleChange = this.handleChange.bind(this);
 
@@ -23,10 +28,13 @@ class Entry extends React.Component<any, any> {
   }
 
   public render() {
+    const entryClass: string = `entry${this.props.focus ? ' entry-focused' : ''}`;
+    const entryStyle: any = {
+      width: "400px",
+      marginLeft: `${2 * this.props.data.indentation}em`
+    };
     return (
-      <div className={`entry${this.props.focus ? ' entry-focused' : ''}`}
-        style={{ width: "400px", marginLeft: `${2 * this.props.data.indentation}em` }}
-      >
+      <div className={entryClass} style={entryStyle}>
         <EntryBar entryType={this.props.data.type} />
         <EntryIcon icon={this.props.data.icon}/>
         <div className="data">
