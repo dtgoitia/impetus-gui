@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Detail from './Detail';
 import './Entry.css';
+import { EntryBar } from './EntryBar';
 
 class Entry extends React.Component<any, any> {
   public textInput: any;
@@ -25,10 +26,7 @@ class Entry extends React.Component<any, any> {
       <div className={`entry${this.props.focus ? ' entry-focused' : ''}`}
         style={{ width: "400px", marginLeft: `${2 * this.props.data.indentation}em` }}
       >
-        <div
-          className="vertical-bar"
-          style={{ backgroundColor: this.GetColorFromType(this.props.data.type) }}
-        >&nbsp;</div>
+        <EntryBar entryType={this.props.data.type} />
         <div className="icon">{this.props.data.icon}</div>
         <div className="data">
           <div className="description">
@@ -49,17 +47,6 @@ class Entry extends React.Component<any, any> {
       (document.activeElement as HTMLElement).blur();
       // .blur() is only guaranteed to exist on HTMLElements, not all Elements.
       // https://github.com/Microsoft/TypeScript/issues/5901
-    }
-  }
-
-  private GetColorFromType(type: any): string {
-    switch (type) {
-      case "work":
-        return 'Red';
-      case "rest":
-        return 'LawnGreen';
-      default:
-        return "Black";
     }
   }
 
