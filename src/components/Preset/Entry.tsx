@@ -2,6 +2,7 @@ import * as React from 'react';
 import Detail from './Detail';
 import './Entry.css';
 import { EntryBar } from './EntryBar';
+import EntryIcon from './EntryIcon';
 
 class Entry extends React.Component<any, any> {
   public textInput: any;
@@ -27,10 +28,12 @@ class Entry extends React.Component<any, any> {
         style={{ width: "400px", marginLeft: `${2 * this.props.data.indentation}em` }}
       >
         <EntryBar entryType={this.props.data.type} />
-        <div className="icon">{this.props.data.icon}</div>
+        <EntryIcon icon={this.props.data.icon}/>
         <div className="data">
           <div className="description">
-            <input ref={this.textInput} type="text" value={this.props.data.description} onChange={this.handleChange} />
+            <input onChange={this.handleChange} ref={this.textInput}
+              type="text" value={this.props.data.description}
+            />
           </div>
           <div className="details">
             <Detail data={this.props.data} />

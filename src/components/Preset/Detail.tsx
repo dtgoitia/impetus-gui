@@ -1,24 +1,33 @@
 import * as React from 'react';
-// import IEntry from './IEntry';
 import LoopDetail from './LoopDetail';
 import WorkDetail from './WorkDetail';
 
-class Detail extends React.Component<any, any> {
-  public render() {
-    switch (this.props.data.type) {
-      case 'loop':
-        return <LoopDetail rounds={this.props.data.rounds} />;
+// TODO: implement a checkbox or similar to handle "pause" property
+// and pass it state to Preset component.
 
-      case 'work':
-        return <WorkDetail time={this.props.data.time} pause={false} />;
-
-      case 'rest':
-        return <WorkDetail time={this.props.data.time} pause={false} />;
-
-      default:
-        throw new RangeError(`A detail can only be: 'loop', 'work', 'rest'`);
-    }
-  }
+interface IDetailDataProps {
+  data: {
+    type: string;
+    rounds?: number;
+    time?: number;
+    pause?: boolean;
+  };
 }
+
+const Detail = ({data}: IDetailDataProps) => {
+  switch (data.type) {
+    case 'loop':
+      return <LoopDetail rounds={data.rounds} />;
+
+    case 'work':
+      return <WorkDetail time={data.time} pause={false} />;
+
+    case 'rest':
+      return <WorkDetail time={data.time} pause={false} />;
+
+    default:
+      throw new RangeError(`A detail can only be: 'loop', 'work', 'rest'`);
+  }
+};
 
 export default Detail;
