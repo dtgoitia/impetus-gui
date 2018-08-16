@@ -1,6 +1,5 @@
 import * as React from 'react';
 // import IEntry from './IEntry';
-import './LoopDetail.css';
 
 const DEFAULT_ROUND_NUMBER = 1;
 
