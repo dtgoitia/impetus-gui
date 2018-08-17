@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { getPressedKeys, IKeyPressEvent } from '../common/keyPress';
 import Entry from './Entry';
 import { EntryType } from './EntryType';
 import { IEntry, ILoopEntry, IWorkRestEntry } from './IEntry';
-
 
 class Preset extends React.Component<any, any> {
 
@@ -100,52 +100,49 @@ class Preset extends React.Component<any, any> {
     }
   }
 
-  private HandleKey(e: { keyCode: any; }) {
+  private HandleKey(event: IKeyPressEvent) {
+    const pressedKeys = getPressedKeys(event);
     // tslint:disable-next-line:no-console
-    console.log(e.keyCode);
-    switch (e.keyCode) {
-      case 37:  // Left arrow
-      case 72:  // H
-        // if (e.ctrlKey) {console.log('Ctrl!')};
+    console.log(pressedKeys);
+    switch (pressedKeys) {
+      case 'ArrowLeft':
+      case 'h':
         if (this.state.editEntry !== null) { break };
         this.UnindentEntry(); break;
-      case 38:  // Up arrow
-      case 75:  // K
-        // if (e.ctrlKey) console.log('Ctrl!');
+      case 'ArrowUp':
+      case 'k':
         if (this.state.editEntry !== null) { break };
         this.FocusUp(); break;
-      case 39:  // Right arrow
-      case 76:  // L
-        // if (e.ctrlKey) console.log('Ctrl!');
+      case 'ArrowRight':
+      case 'l':
         if (this.state.editEntry !== null) { break };
         this.IndentEntry(); break;
-      case 40:  // Down arrow
-      case 74:  // J
-        // if (e.ctrlKey) {console.log('Ctrl!')};
+      case 'ArrowDown':
+      case 'j':
         if (this.state.editEntry !== null) { break };
         this.FocusDown(); break;
-      // case 32: // SPACE
-      //   if (this.state.editEntry !== null) break;
-      //   this.ToggleEditDescription(); break;
-      case 113:
+      case 'space':
+        if (this.state.editEntry !== null) { break };
+        this.ToggleEditDetail(); break;
+      case 'enter': // ENTER
+      case 'F2': // F2
         this.ToggleEditDescription(); break;
-      case 13: // ENTER
-        this.ToggleEditDescription(); break;
-      case 27: // Escape
+      case 'escape': // Escape
         this.StopEditing(); break;
 
-      case 49: // 1 (above keyboard)
-      case 97: // 1 (right keyboard)
+      case '1':
+      case 'Numpad1':
         this.AddEntry(EntryType.Loop); break;
-      case 50: // 2 (above keyboard)
-      case 98: // 2 (right keyboard)
+      case '2':
+      case 'Numpad2':
         this.AddEntry(EntryType.Work); break;
-      case 51: // 3 (above keyboard)
-      case 99: // 3 (right keyboard)
+      case '3':
+      case 'Numpad3':
         this.AddEntry(EntryType.Rest); break;
-      case 107: // +
+      case 'NumpadAdd':
         this.AddEntry(); break;
-      case 109: // -
+      case 'Delete':
+      case 'NumpadSubstract':
         this.RemoveEntry(); break;
       default:
         // tslint:disable-next-line:no-console
@@ -190,6 +187,11 @@ class Preset extends React.Component<any, any> {
       ? this.setState({ editEntry: this.state.focusEntry })
       : this.setState({ editEntry: null })
   }
+
+  private ToggleEditDetail(): void {
+    alert('WIP: implement entry detail edition!')
+  }
+
   private UnindentEntry(): void {
     const focusedEntryIndex: number = this.state.focusEntry;
     const updatedData = this.state.data;
