@@ -130,14 +130,14 @@ class Preset extends React.Component<any, any> {
       case 'escape': // Escape
         this.StopEditing(); break;
 
-      case '1':
-      case 'Numpad1':
+      case 'ctrl+1':
+      case 'ctrl+Numpad1':
         this.AddEntry(EntryType.Loop); break;
-      case '2':
-      case 'Numpad2':
+      case 'ctrl+2':
+      case 'ctrl+Numpad2':
         this.AddEntry(EntryType.Work); break;
-      case '3':
-      case 'Numpad3':
+      case 'ctrl+3':
+      case 'ctrl+Numpad3':
         this.AddEntry(EntryType.Rest); break;
       case 'NumpadAdd':
         this.AddEntry(); break;
