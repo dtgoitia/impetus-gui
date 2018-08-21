@@ -6,18 +6,24 @@ import WorkDetail from './WorkDetail';
 // and pass it state to Preset component.
 
 interface IDetailDataProps {
+  changer: any; // TODO: replace any for Function
   data: {
-    type: string;
+    editModeOn: boolean;
     rounds?: number;
-    time?: number;
     pause?: boolean;
+    time?: number;
+    type: string;
   };
+  reference: any;
 }
 
-const Detail = ({data}: IDetailDataProps) => {
+const Detail = ({changer, data, reference}: IDetailDataProps) => {
   switch (data.type) {
     case 'loop':
-      return <LoopDetail rounds={data.rounds} />;
+      return(
+        <LoopDetail rounds={data.rounds} editModeOn={data.editModeOn}
+          reference={reference} changer={changer}/>
+      );
 
     case 'work':
       return <WorkDetail time={data.time} pause={false} />;
