@@ -33,8 +33,8 @@ class Preset extends React.Component<any, any> {
     this.state = {
       data: [
         // { indentation: 0, type: 'work', description: 'Ascend', time: 25000 },
-        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3, editModeOn: false },
-        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3, editModeOn: true },
+        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3 },
+        { indentation: 0, type: 'loop', description: 'Warmup', rounds: 3 },
         // { indentation: 1, type: 'work', description: 'Ascend', time: 25000 },
         // { indentation: 1, type: 'rest', description: 'Low',    time: 90000 },
         // { indentation: 0, type: 'loop', description: 'Warmup', rounds: 2 },
@@ -52,6 +52,7 @@ class Preset extends React.Component<any, any> {
     this.UnindentEntry = this.UnindentEntry.bind(this);
     this.HandleKey = this.HandleKey.bind(this);
     this.HandleEntryDescriptionUpdate = this.HandleEntryDescriptionUpdate.bind(this);
+    this.HandleLoopDetailUpdate = this.HandleLoopDetailUpdate.bind(this);
   }
 
   public componentWillMount() {
@@ -70,7 +71,8 @@ class Preset extends React.Component<any, any> {
             focus={i === this.state.focusEntry}
             focusEntryDescription={i === this.state.editEntryDescription}
             focusDetailDescription={i === this.state.editDetailDescription}
-            descriptionHandler={this.HandleEntryDescriptionUpdate}
+            detailDescriptionHandler={this.HandleLoopDetailUpdate}
+            entryDescriptionHandler={this.HandleEntryDescriptionUpdate}
           />
         )
       });
@@ -109,7 +111,7 @@ class Preset extends React.Component<any, any> {
   private HandleKey(event: IKeyPressEvent) {
     const pressedKeys = getPressedKeys(event);
     // tslint:disable-next-line:no-console
-    console.log(pressedKeys);
+    // console.log(pressedKeys);
     switch (pressedKeys) {
       case 'ArrowLeft':
       case 'h':
@@ -127,13 +129,13 @@ class Preset extends React.Component<any, any> {
       case 'j':
         if (this.InEditMode()) { break };
         this.FocusDown(); break;
-      case 'space':
-        if (this.InEditMode()) { break };
-        this.ToggleEditDetail(); break;
-      case 'enter': // ENTER
-      case 'F2': // F2
-        this.ToggleEditDescription(); break;
-      case 'escape': // Escape
+      case 'enter':
+      case 'F2':
+        this.ToggleDescriptionEdition('editEntryDescription'); break;
+      case 'ctrl+enter':
+      case 'ctrl+F2':
+        this.ToggleDescriptionEdition('editDetailDescription'); break;
+      case 'escape':
         this.StopEditing(); break;
 
       case 'ctrl+1':
@@ -170,14 +172,15 @@ class Preset extends React.Component<any, any> {
     currentData.splice(focusedEntryIndex, 1, focusedEntry)
     this.setState({ data: currentData });
   }
-  // private HandleLoopDetailUpdate(rounds: number): void {
-  //   const focusedEntryIndex: number = this.state.focusEntry;
-  //   const currentData = [...this.state.data];
-  //   const focusedEntry: ILoopEntry = currentData[focusedEntryIndex];
-  //   focusedEntry.rounds = rounds;
-  //   currentData.splice(focusedEntryIndex, 1, focusedEntry)
-  //   this.setState({ data: currentData });
-  // }
+
+  private HandleLoopDetailUpdate(rounds: number): void {
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const currentData = [...this.state.data];
+    const focusedEntry: ILoopEntry = currentData[focusedEntryIndex];
+    focusedEntry.rounds = rounds;
+    currentData.splice(focusedEntryIndex, 1, focusedEntry)
+    this.setState({ data: currentData });
+  }
 
   private IndentEntry(): void {
     const focusedEntryIndex: number = this.state.focusEntry;
@@ -192,11 +195,6 @@ class Preset extends React.Component<any, any> {
   }
 
   private InEditMode(): boolean {
-    const editEntryDescription: boolean = this.state.editEntryDescription;
-    const editDetailDescription: boolean = this.state.editDetailDescription;
-    // tslint:disable
-    console.log(`editEntryDescription = ${editEntryDescription}`);
-    console.log(`editDetailDescription = ${editDetailDescription}`);
     return this.state.editEntryDescription !== null || this.state.editDetailDescription !== null;
   }
 
@@ -210,14 +208,17 @@ class Preset extends React.Component<any, any> {
     if (this.state.editEntryDescription !== null) { this.setState({ editEntryDescription: null }) };
   }
 
-  private ToggleEditDescription(): void {
-    this.state.editEntryDescription === null
-      ? this.setState({ editEntryDescription: this.state.focusEntry })
-      : this.setState({ editEntryDescription: null })
-  }
+  private ToggleDescriptionEdition(description: string): void {
+    const newPartialState = {
+      editDetailDescription: null,
+      editEntryDescription: null,
+    };
 
-  private ToggleEditDetail(): void {
-    alert('WIP: implement entry detail edition!')
+    if (this.state[description] === null) {
+      newPartialState[description] = this.state.focusEntry;
+    }
+
+    this.setState(newPartialState);
   }
 
   private UnindentEntry(): void {
@@ -236,7 +237,6 @@ class Preset extends React.Component<any, any> {
     if (newFocusEntry < 0) { return false; }
     if (newFocusEntry > this.state.data.length - 1) { return false; }
     return true;
-
   }
 
   private ValidateFocusEntryNewIndentation(newIndentation: number): boolean {

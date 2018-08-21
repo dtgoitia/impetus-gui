@@ -14,16 +14,13 @@ interface IDetailDataProps {
     time?: number;
     type: string;
   };
-  reference: any;
+  editModeOn: boolean;
 }
 
-const Detail = ({changer, data, reference}: IDetailDataProps) => {
+const Detail = ({ changer, data, editModeOn }: IDetailDataProps) => {
   switch (data.type) {
     case 'loop':
-      return(
-        <LoopDetail rounds={data.rounds} editModeOn={data.editModeOn}
-          reference={reference} changer={changer}/>
-      );
+      return <LoopDetail changer={changer} editModeOn={editModeOn} rounds={data.rounds} />;
 
     case 'work':
       return <WorkDetail time={data.time} pause={false} />;
