@@ -22,6 +22,7 @@
         ]
       }
     ],
+    "no-trailing-whitespace": [true, "ignore-template-strings"],
     "object-literal-sort-keys": false,
     "quotemark": [true, "single", "jsx-double", "avoid-escape"]
   },
