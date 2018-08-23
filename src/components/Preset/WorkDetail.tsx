@@ -4,7 +4,7 @@ const DEFAULT_TIME = 25000;
 
 /**
  * Format time in seconds to a string as 'hh:mm:ss'.
- * @param timeInSeconds 
+ * @param timeInSeconds
  */
 const FormatTime = (timeInSeconds: number): string => {
   const seconds: number = parseInt(((timeInSeconds / 1000) % 60).toString(), 10);

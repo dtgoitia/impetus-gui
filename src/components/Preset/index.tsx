@@ -56,11 +56,11 @@ class Preset extends React.Component<any, any> {
   }
 
   public componentWillMount() {
-    document.addEventListener("keydown", this.HandleKey);
+    document.addEventListener('keydown', this.HandleKey);
   }
 
   public componentWillUnmount() {
-    document.removeEventListener("keydown", this.HandleKey);
+    document.removeEventListener('keydown', this.HandleKey);
   }
 
   public render() {

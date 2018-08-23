@@ -45,7 +45,7 @@ class Entry extends React.Component<IEntryProps, any> {
   public render() {
     const entryClass: string = `entry${this.props.focus ? ' entry-focused' : ''}`;
     const entryStyle: any = {
-      width: "400px",
+      width: '400px',
       marginLeft: `${2 * this.props.data.indentation}em`
     };
     return (
