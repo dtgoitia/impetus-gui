@@ -24,6 +24,13 @@
     ],
     "no-trailing-whitespace": [true, "ignore-template-strings"],
     "object-literal-sort-keys": false,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "lowercase-first",
+        "named-imports-order": "lowercase-first"
+      }
+    ],
     "quotemark": [true, "single", "jsx-double", "avoid-escape"]
   },
   "linterOptions": {
