@@ -92,9 +92,6 @@ const keyCodeMap: IKeyCodeMap = {
   190: '.',
 };
 
-// tslint:disable
-console.log(keyCodeMap);
-
 export const getPressedKeys = (event: IKeyPressEvent): string => {
   const result: string[] = [];
   if (event.ctrlKey) { result.push('ctrl') };
