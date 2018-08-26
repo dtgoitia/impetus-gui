@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+
+
+import subprocess
+import sys
+from dulwich import porcelain
+
+
+def get_staged_files() -> list:
+    """Return a list with the file name of all staged files."""
+    stage_status = porcelain.status().staged
+    staged_files = stage_status['add'] + stage_status['delete'] + stage_status['modify']
+    staged_files_str = [byte_file_name.decode('utf-8') for byte_file_name in staged_files]
+    return staged_files_str
+
+
+def build_linting_command(files: list) -> str:
+    """Return a CLI instruction to run TSLint over all files in 'files'."""
+    formatted_files = [f"'{file}'" for file in files]
+    return f"node_modules/.bin/tslint {' '.join(formatted_files)} --config ./tslint.json"
+
+
+def report_tslint_failure(result: subprocess.CompletedProcess):
+    """Print a prettier TSLint report."""
+    stdout = result.stdout.decode('utf-8')
+    stdout = stdout.split('\n')
+    stdout = [line for line in stdout if line != '']
+    errors = [line.split(': ')[1:] for line in stdout]
+
+    msg = '\nOopss! There are few things to fix before commiting:\n'
+    for error in errors:
+        msg += '\n'
+        msg += f"  {error[0]}\n"
+        msg += f"     ~> {error[1]}\n"
+    print(msg)
+
+
+def main():
+    """Run TSLint on staged .tsx files. If linting errors, abort commit and report."""
+    print('Getting staged files...')
+    staged_files = get_staged_files()
+
+    print('Getting staged .tsx files...')
+    staged_tsx_files = [file for file in staged_files if file.split('.')[-1] == 'tsx']
+    if len(staged_tsx_files) == 0:
+        print('There are no staged .tsx files to lint\n')
+    else:
+        print('Linting files in project before commiting...')
+        command = build_linting_command(staged_tsx_files)
+        command_result = subprocess.run([command], shell=True, capture_output=True)
+
+        if command_result.returncode != 0:
+            report_tslint_failure(command_result)
+            sys.exit(1)
+        print('TSLint is happy with your .tsx files.')
+
+    print('Proceeding to commit...')
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

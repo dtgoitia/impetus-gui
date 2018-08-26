@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+
+from io import StringIO
+from dulwich import porcelain
+
+
+GIT_LOG_ENTRY_DELIMITER = '--------------------------------------------------\n'
+
+
+def get_commit_message(log: str) -> str:
+    """Strip commit headers and return the first line of the commit message."""
+    commit_lines = log.split('\n')
+    message_first_line = commit_lines[4]
+    return message_first_line
+
+
+def get_last_2_commits() -> tuple:  # Tuple[str, str]
+    """Return the content of the last commit."""
+    my_stream = StringIO()
+    porcelain.log(outstream=my_stream, max_entries=2)
+    log = my_stream.getvalue()
+    commits = log.split(GIT_LOG_ENTRY_DELIMITER)
+    last_commit_messages = [get_commit_message(commit) for commit in commits if len(commit) > 0]
+    return (last_commit_messages[0], last_commit_messages[1])
+
+
+def is_wip(commit: str) -> bool:
+    """Return true if the commit message is Wok In Progress."""
+    lowered_commit = commit.lower()
+    if lowered_commit == "wip":
+        return True
+    if lowered_commit == "wip\n":
+        return True
+    if lowered_commit == "work in progress":
+        return True
+    if lowered_commit == "work in progress\n":
+        return True
+    return False
+
+
+def main():
+    """Validate last two commits. If any errors, abort commit and report."""
+    print('Validating commit history...')
+
+    last_commit, second_last_commit = get_last_2_commits()
+    if is_wip(last_commit) and is_wip(second_last_commit):
+        print(f"""
+=================================== WARNING ===================================
+
+The last 2 commit messages are WIP (Work In Progress):
+   ~> '{last_commit}'
+   ~> '{second_last_commit}'
+
+Please squash them into a single commit.
+
+===============================================================================
+""")
+    print('Commit history looks fine :)')
+
+
+if __name__ == "__main__":
+    main()
