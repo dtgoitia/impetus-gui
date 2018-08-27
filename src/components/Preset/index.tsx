@@ -136,6 +136,7 @@ class Preset extends React.Component<any, any> {
         this.FocusDown(); break;
       case 'enter':
       case 'F2':
+        if (this.InEditMode()) { this.StopEditing(); break };
         this.ToggleDescriptionEdition('editEntryDescription'); break;
       case 'ctrl+enter':
       case 'ctrl+F2':
@@ -209,7 +210,7 @@ class Preset extends React.Component<any, any> {
   }
 
   private InEditMode(): boolean {
-    return this.state.editEntryDescription !== null || this.state.editDetailDescription !== null;
+    return this.state.editDetailDescription !== null || this.state.editEntryDescription !== null;
   }
 
   private RemoveEntry(): void {
@@ -219,7 +220,10 @@ class Preset extends React.Component<any, any> {
   }
 
   private StopEditing() {
-    if (this.state.editEntryDescription !== null) { this.setState({ editEntryDescription: null }) };
+    if (this.InEditMode()) { this.setState({
+      editDetailDescription: null,
+      editEntryDescription: null
+    })};
   }
 
   private ToggleDescriptionEdition(description: string): void {
