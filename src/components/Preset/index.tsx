@@ -53,6 +53,7 @@ class Preset extends React.Component<any, any> {
     this.HandleKey = this.HandleKey.bind(this);
     this.HandleEntryDescriptionUpdate = this.HandleEntryDescriptionUpdate.bind(this);
     this.HandleLoopDetailUpdate = this.HandleLoopDetailUpdate.bind(this);
+    this.HandleWorkRestDetailUpdate = this.HandleWorkRestDetailUpdate.bind(this);
   }
 
   public componentWillMount() {
@@ -71,7 +72,11 @@ class Preset extends React.Component<any, any> {
             focus={i === this.state.focusEntry}
             focusEntryDescription={i === this.state.editEntryDescription}
             focusDetailDescription={i === this.state.editDetailDescription}
-            detailDescriptionHandler={this.HandleLoopDetailUpdate}
+            detailDescriptionHandler={
+              x.type === EntryType.Loop
+                ? this.HandleLoopDetailUpdate
+                : this.HandleWorkRestDetailUpdate
+            }
             entryDescriptionHandler={this.HandleEntryDescriptionUpdate}
           />
         )
@@ -178,6 +183,15 @@ class Preset extends React.Component<any, any> {
     const currentData = [...this.state.data];
     const focusedEntry: ILoopEntry = currentData[focusedEntryIndex];
     focusedEntry.rounds = rounds;
+    currentData.splice(focusedEntryIndex, 1, focusedEntry)
+    this.setState({ data: currentData });
+  }
+
+  private HandleWorkRestDetailUpdate(time: number): void {
+    const focusedEntryIndex: number = this.state.focusEntry;
+    const currentData = [...this.state.data];
+    const focusedEntry: IWorkRestEntry = currentData[focusedEntryIndex];
+    focusedEntry.time = time;
     currentData.splice(focusedEntryIndex, 1, focusedEntry)
     this.setState({ data: currentData });
   }

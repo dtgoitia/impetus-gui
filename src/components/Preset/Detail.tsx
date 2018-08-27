@@ -23,10 +23,10 @@ const Detail = ({ changer, data, editModeOn }: IDetailDataProps) => {
       return <LoopDetail changer={changer} editModeOn={editModeOn} rounds={data.rounds} />;
 
     case 'work':
-      return <WorkDetail time={data.time} pause={false} />;
+      return <WorkDetail changer={changer} editModeOn={editModeOn} time={data.time} pause={false} />;
 
     case 'rest':
-      return <WorkDetail time={data.time} pause={false} />;
+      return <WorkDetail changer={changer} editModeOn={editModeOn} time={data.time} pause={false} />;
 
     default:
       throw new RangeError(`A detail can only be: 'loop', 'work', 'rest'`);

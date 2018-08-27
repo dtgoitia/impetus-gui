@@ -52,8 +52,6 @@ class LoopDetail extends React.Component<ILoopDetailProps, any> {
     if (ref.current !== null) {
       ref.current.blur();
     }
-    // tslint:disable-next-line
-    console.log(`LoopDetail input ref.current is null\nref=${JSON.stringify(ref, null, 2)}`);
   }
 
   private focusTextInput(ref: any): void {

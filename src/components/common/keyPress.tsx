@@ -10,6 +10,7 @@ interface IKeyCodeMap {
 }
 
 const keyCodeMap: IKeyCodeMap = {
+  8: 'backspace',
   9: 'tab',
   13: 'enter',
   27: 'escape',
