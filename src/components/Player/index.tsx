@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './Player.css';
+import ProgressBar from './ProgressBar';
 
 interface IProcessedEntry {
   description: string;
@@ -51,6 +52,10 @@ class Player extends React.Component<any, any> {
         <button onClick={this.stopTimer}>STOP</button>
         <button onClick={this.restartTimerEntry}>RESTART ENTRY</button>
         <button onClick={this.skipEntry}>SKIP</button>
+        <ProgressBar
+          elapsedTime={this.state.elapsedTime}
+          preset={this.processedPreset}
+        />
       </div>
     );
   }
