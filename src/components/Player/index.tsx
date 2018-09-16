@@ -1,38 +1,43 @@
 import * as React from 'react';
+import DisplayEntry from './DisplayEntry';
+import { DisplayEntryStatus } from './DisplayEntryStatus';
+import { IProcessedEntry } from './IProcessedEntry';
 import './Player.css';
 import ProgressBar from './ProgressBar';
 
-interface IProcessedEntry {
-  description: string;
-  duration: number;
-  start: number;
-  end: number;
+interface IPlayerState {
+  // currentEntry: IProcessedEntry;
+  currentEntryIndex: number;
+  elapsedTime: number;
+  intervalId: number;
+  processedPreset: IProcessedEntry[];
+  watchInterval: number;
 }
-type IPreset = IProcessedEntry[];
 
-class Player extends React.Component<any, any> {
-  public processedPreset: IPreset = [
+class Player extends React.Component<any, IPlayerState> {
+  public processedPreset: IProcessedEntry[] = [
     // Validation TODO
     //  - entries are sorted based on start/end time
     //  - start <= end
     //  - entries cannot overlap on time
-    { description: 'Work 1', duration: 2000, start:    0, end:  2000},
-    { description: 'Rest 1', duration: 3000, start: 2000, end:  5000},
-    { description: 'Work 2', duration: 3000, start: 5000, end:  8000},
-    { description: 'Rest 2', duration: 4000, start: 8000, end: 12000},
+    { description: 'Work 1', duration: 2000, start:     0, end:  2000},
+    { description: 'Rest 1', duration: 3000, start:  2000, end:  5000},
+    { description: 'Work 2', duration: 3000, start:  5000, end:  8000},
+    { description: 'Rest 2', duration: 2000, start:  8000, end: 10000},
+    { description: 'Rest 2', duration: 2000, start: 10000, end: 12000},
   ];
 
   constructor(props: any) {
     super(props);
     this.state = {
-      currentEntry: this.processedPreset[0],
+      currentEntryIndex: 0,
       elapsedTime: 0,
       intervalId: -1,
       processedPreset: this.processedPreset,
       watchInterval: 200
     }
 
-    this.getCurrentBtimer = this.getCurrentBtimer.bind(this);
+    this.getCurrentEntryIndex = this.getCurrentEntryIndex.bind(this);
     this.pauseTimer = this.pauseTimer.bind(this);
     this.restartTimerEntry = this.restartTimerEntry.bind(this);
     this.skipEntry = this.skipEntry.bind(this);
@@ -42,36 +47,56 @@ class Player extends React.Component<any, any> {
   }
 
   public render(): JSX.Element {
-    const entry: IProcessedEntry = this.state.currentEntry;
+    const i: number = this.state.currentEntryIndex;
+    const n: number = this.state.processedPreset.length;
+    const emptyEntry = <DisplayEntry
+      entry={{description: '', duration: 0, start: 0, end: 0}}
+      status={DisplayEntryStatus.Next} />;
+    const entries = <div id={'entry-display'}>
+      {i > 0
+        ? <DisplayEntry entry={this.state.processedPreset[i - 1]} status={DisplayEntryStatus.Completed} />
+        : null
+      }
+      <DisplayEntry entry={this.state.processedPreset[i]} status={DisplayEntryStatus.Running} />
+      {i < n
+        ? <DisplayEntry entry={this.state.processedPreset[i + 1]} status={DisplayEntryStatus.Next} />
+        : emptyEntry
+      }
+      {i + 1 < n
+        ? <DisplayEntry entry={this.state.processedPreset[i + 2]} status={DisplayEntryStatus.Next} />
+        : emptyEntry
+      }
+    </div>;
     return (
-      <div>
-        <div>Current entry: {entry.description} ({entry.start}-{entry.end})</div>
+      <div>{entries}
+        <ProgressBar
+          elapsedTime={this.state.elapsedTime}
+          flatPreset={this.processedPreset}
+        />
         <div>Elapsed time: {this.state.elapsedTime / 1000}</div>
         <button onClick={this.startTimer}>START</button>
         <button onClick={this.pauseTimer}>PAUSE</button>
         <button onClick={this.stopTimer}>STOP</button>
         <button onClick={this.restartTimerEntry}>RESTART ENTRY</button>
         <button onClick={this.skipEntry}>SKIP</button>
-        <ProgressBar
-          elapsedTime={this.state.elapsedTime}
-          preset={this.processedPreset}
-        />
       </div>
     );
   }
 
-  private getCurrentBtimer(elapsedTime: number, preset: IPreset): IProcessedEntry|null {
-    for (const entry of preset) {
+  private getCurrentEntryIndex(elapsedTime: number): number {
+    const preset: IProcessedEntry[] = this.state.processedPreset;
+    for (let i = 0; i < preset.length; i++) {
+      const entry: IProcessedEntry = preset[i];
       if (entry.start <= elapsedTime && elapsedTime < entry.end) {
-        return entry;
+        return i;
       }
     }
 
     if (elapsedTime === preset[preset.length - 1].end) {
-      return preset[preset.length - 1];
+      return preset.length - 1;
     }
 
-    return null;
+    return -1;
   }
 
   private pauseTimer(): void {
@@ -80,36 +105,43 @@ class Player extends React.Component<any, any> {
   }
 
   private restartTimerEntry(): void {
-    const currentEntryStartTime: number = this.state.currentEntry.start;
+    const currentEntryStartTime: number = this.state.processedPreset[this.state.currentEntryIndex].start;
     this.setState({elapsedTime: currentEntryStartTime});
   }
 
   private skipEntry(): void {
-    const currentEntryStartTime: number = this.state.currentEntry.end;
+    const currentEntryStartTime: number = this.state.processedPreset[this.state.currentEntryIndex].end;
     this.setState({elapsedTime: currentEntryStartTime});
   }
 
   private startTimer(): void {
     if (this.state.intervalId < 0) {
-      const intervalId: number = setInterval(this.updateState, this.state.watchInterval);
+      const intervalId: number = window.setInterval(this.updateState, this.state.watchInterval);
       this.setState({intervalId});
     }
-    this.setState({currentEntry: this.getCurrentBtimer(this.state.elapsedTime, this.processedPreset)});
+
+    const currentEntryIndex: number = this.getCurrentEntryIndex(this.state.elapsedTime);
+    this.setState({currentEntryIndex});
   }
 
   private stopTimer(): void {
     this.pauseTimer();
     this.setState({
-      currentEntry: this.getCurrentBtimer(0, this.processedPreset),
+      currentEntryIndex: 0,
       elapsedTime: 0
     });
   }
 
   private updateState(): void {
     const elapsedTime: number = this.state.elapsedTime + this.state.watchInterval;
-    const currentEntry: IProcessedEntry|null = this.getCurrentBtimer(elapsedTime, this.state.processedPreset);
-    if (currentEntry === null) { this.pauseTimer(); return; }
-    this.setState({currentEntry, elapsedTime});
+    const currentEntryIndex: number = this.getCurrentEntryIndex(this.state.elapsedTime);
+
+    if (currentEntryIndex === -1) {
+      this.pauseTimer();
+      return;
+    }
+
+    this.setState({currentEntryIndex, elapsedTime});
   }
 }
 

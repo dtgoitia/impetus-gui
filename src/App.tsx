@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Preset from './components/Preset/';
+import Player from './components/Player/';
+import Preset from './components/Preset';
 
 class App extends React.Component {
   public render() {
-    return <Preset />;
+    return <div><Preset /><Player /></div>;
   }
 }
 

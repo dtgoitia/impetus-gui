@@ -1,0 +1,18 @@
+.display-entry {
+  padding: .7em;
+}
+
+.completed {
+  background-color: #333;
+  color: #999;
+}
+
+.running {
+  background-color: rgb(0, 255, 0);
+  color: black;
+}
+
+.next {
+  background-color: black;
+  color: white;
+}
