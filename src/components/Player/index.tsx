@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Beep } from '../common/beep';
 import DisplayEntry from './DisplayEntry';
 import { DisplayEntryStatus } from './DisplayEntryStatus';
 import { IProcessedEntry } from './IProcessedEntry';
@@ -26,6 +27,7 @@ class Player extends React.Component<any, IPlayerState> {
     { description: 'Rest 2', duration: 2000, start:  8000, end: 10000},
     { description: 'Rest 2', duration: 2000, start: 10000, end: 12000},
   ];
+  private beep: Beep;
 
   constructor(props: any) {
     super(props);
@@ -44,6 +46,8 @@ class Player extends React.Component<any, IPlayerState> {
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
     this.updateState = this.updateState.bind(this);
+
+    this.beep = new Beep();
   }
 
   public render(): JSX.Element {
@@ -135,6 +139,12 @@ class Player extends React.Component<any, IPlayerState> {
   private updateState(): void {
     const elapsedTime: number = this.state.elapsedTime + this.state.watchInterval;
     const currentEntryIndex: number = this.getCurrentEntryIndex(this.state.elapsedTime);
+    const currentEntry: IProcessedEntry = this.state.processedPreset[currentEntryIndex];
+    const countdown: number = 1000;
+    const x: number = currentEntry.end - countdown;
+    if (x > elapsedTime) {
+      this.beep.high();
+    }
 
     if (currentEntryIndex === -1) {
       this.pauseTimer();
