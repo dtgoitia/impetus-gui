@@ -1,0 +1,17 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  border: 2px solid white;
+}
+
+.navbar {
+  border: 2px solid white;
+
+  flex: 0 0 auto;
+  z-index: 100;
+}

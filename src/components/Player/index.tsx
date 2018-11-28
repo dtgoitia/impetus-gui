@@ -68,7 +68,7 @@ class Player extends React.Component<any, IPlayerState> {
       }
     </div>;
     return (
-      <div>{entries}
+      <div className={'player'}>{entries}
         <ProgressBar
           elapsedTime={this.state.elapsedTime}
           flatPreset={this.processedPreset}
