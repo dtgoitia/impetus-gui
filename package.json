@@ -23,7 +23,9 @@
     "@types/react-dom": "^16.0.6",
     "@types/react-test-renderer": "^16.0.2",
     "jest-each": "^23.5.0",
+    "react-redux": "^6.0.0",
     "react-test-renderer": "^16.4.2",
+    "redux": "^4.0.1",
     "typescript": "^3.0.1"
   }
 }
