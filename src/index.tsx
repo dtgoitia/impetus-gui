@@ -5,6 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'react-redux';
 import { createStore, Store } from 'redux';
+import { addTodo } from './redux/actions/actions';
 import rootReducer from './redux/reducers';  // which combines all the other reducers
 
 import App from './App';
@@ -17,5 +18,9 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
+//tslint:disable
+console.log(store.getState());
+store.dispatch(addTodo('my first todo!'));
+console.log(store.getState());
 
 registerServiceWorker();

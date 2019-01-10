@@ -1,5 +1,5 @@
 import { Action, AnyAction, Reducer } from 'redux';
-import { ActionTypes } from '../actionTypes';
+import { ActionTypes } from '../actions/actionTypes';
 
 interface ITodoAction extends Action {
   payload: any;
