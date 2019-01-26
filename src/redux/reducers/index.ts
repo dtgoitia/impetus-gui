@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { combineReducers, AnyAction } from 'redux';
 import { ActionTypes } from '../actions/actionTypes';
-import { ITodo } from '../state/todo';
+import { ITodo } from '../state/ITodo';
 import { presetReducer } from './presetExplorer';
 
 /**

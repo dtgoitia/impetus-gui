@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'react-redux';
 import { createStore, Store } from 'redux';
-import { addTodo } from './redux/actions/actions';
+import { addTodo } from './redux/actions/todoActions';
 import mainReducer from './redux/reducers';  // which combines all the other reducers
 
 import App from './App';
