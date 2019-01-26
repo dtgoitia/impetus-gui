@@ -1,9 +1,11 @@
 import { Action, AnyAction, Reducer } from 'redux';
+import { IPreset } from 'src/components/Preset/IPreset';
 import { IPresetPreview } from 'src/components/Preset/IPresetPreview';
 
-interface IPresetExplorerState {
-  presets: IPresetPreview[];    // preset preview, this list was reduced from preset list (with full details)
+export interface IPresetExplorerState {
+  presetPreviews: IPresetPreview[];    // preset preview, this list was reduced from preset list (with full details)
   selectedPreset: null|number;  // select the preset by ID, or null if none selected
+  presets?: IPreset[]; // this holds all the data of all the presets
 }
 
 interface IPresetAction extends Action {
@@ -11,7 +13,7 @@ interface IPresetAction extends Action {
 }
 
 const presetsInitialState: IPresetExplorerState = {
-  presets: [
+  presetPreviews: [
     {
       id: 1,
       name: 'Preset dtg',

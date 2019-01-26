@@ -1,22 +1,46 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { IPresetExplorerState } from 'src/redux/reducers/presetExplorer';
 import { IState } from 'src/redux/state';
+import { IPresetPreview } from '../Preset/IPresetPreview';
 
-interface IPresetExplorerProps {
-  [x: string]: any;
+type IPresetExplorerProps = IPresetExplorerState;
+
+interface IPresetPreviewProps {
+  key: string|number;
+  preset: IPresetPreview
 }
 
-const PresetExplorer: React.SFC<IPresetExplorerProps> = (props) => {
+const PresetPreview: React.FC<IPresetPreviewProps> = ({key, preset}) => {
   return(
-    <div>
+    <div className={'preset-preview'} key={key}>
+      <div className={'preset-name'}>{preset.name}</div>
+      <div className={'preset-summary'}>{preset.summary}</div>
+    </div>
+  );
+};
+
+const generatetePresetList = (presets: IPresetPreview[]) => {
+  return presets.map((preset: IPresetPreview, i: number): JSX.Element => {
+    return <PresetPreview key={preset.id} preset={preset} />;
+  });
+};
+
+const PresetExplorer: React.FC<IPresetExplorerProps> = (props: IPresetExplorerProps) => {
+  if (props.presetPreviews === undefined) {
+    return <div>There are not presets</div>;
+  }
+  const presetListElements: JSX.Element[] = generatetePresetList(props.presetPreviews);
+  return(
+    <div className={'sidebar'}>
       <h1>PresetExplorer</h1>
-      <p>{JSON.stringify(props)}</p>
+      {presetListElements}
     </div>
   );
 };
 
 function mapStateToProps(state: IState): IPresetExplorerProps {
-  const { presets }: IState = state;
+  const { presets } = state;
   return presets;
 }
 

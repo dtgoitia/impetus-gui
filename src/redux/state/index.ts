@@ -1,7 +1,7 @@
-import { IPresetPreview } from 'src/components/Preset/IPresetPreview';
+import { IPresetExplorerState } from '../reducers/presetExplorer';
 import { ITodo } from './todo';
 
 export interface IState {
-  todos: ITodo[];
-  presets: IPresetPreview
+  todos?: ITodo[];
+  presets: IPresetExplorerState;
 };
