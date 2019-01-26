@@ -17,6 +17,10 @@ const todosInitialState: ITodo[] = [
   {
     text: 'This is the default to-do',
     completed: false
+  },
+  {
+    text: 'This is the second to-do',
+    completed: true
   }
 ];
 

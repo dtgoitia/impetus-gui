@@ -6,7 +6,7 @@ interface ITodoAction extends Action {
 }
 
 const initialState: any = {
-  allIds: [],
+  allIds: [1, 2, 3],
   byIds: {}
 };
 
