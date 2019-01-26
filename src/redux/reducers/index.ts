@@ -1,8 +1,8 @@
 import { Reducer } from 'react';
 import { combineReducers, AnyAction } from 'redux';
 import { ActionTypes } from '../actions/actionTypes';
-import { IState } from '../state';
 import { ITodo } from '../state/todo';
+import { presetReducer } from './presetExplorer';
 
 /**
  * REDUCERS
@@ -63,9 +63,10 @@ function todos(todosState = todosInitialState, action: AnyAction): ITodo[] {
 // ----------------------------------------------------------------------
 
 // Combine all the reducers in a single reducer.
-const todoApp: Reducer<IState, AnyAction> = combineReducers({
-  todos
+const mainReducer: Reducer<any, AnyAction> = combineReducers({
+  todos,
+  presets: presetReducer
 });
 
 // Expose a single god-reducer which knows how to handle all the actions
-export default todoApp;
+export default mainReducer;

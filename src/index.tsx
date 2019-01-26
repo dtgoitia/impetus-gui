@@ -6,11 +6,11 @@ import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { createStore, Store } from 'redux';
 import { addTodo } from './redux/actions/actions';
-import rootReducer from './redux/reducers';  // which combines all the other reducers
+import mainReducer from './redux/reducers';  // which combines all the other reducers
 
 import App from './App';
 
-const store: Store = createStore(rootReducer);
+const store: Store = createStore(mainReducer);
 
 ReactDOM.render(
   <Provider store={store}>

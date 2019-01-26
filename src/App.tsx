@@ -1,14 +1,15 @@
 import * as React from 'react';
 import Player from './components/Player/';
 import Preset from './components/Preset';
-import TestReduxComponent from './tmp-components/TestReduxComponent';
+import PresetExplorer from './components/PresetExplorer';
+// import TestReduxComponent from './tmp-components/TestReduxComponent';
 import TestReduxFunctionalComponent from './tmp-components/TestReduxFunctionalComponent';
 
 class App extends React.Component {
   public render() {
     return(
       <div>
-        <TestReduxComponent />
+        <PresetExplorer />
         <TestReduxFunctionalComponent />
         <Preset />
         <Player />
