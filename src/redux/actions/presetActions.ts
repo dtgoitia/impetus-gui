@@ -2,21 +2,19 @@ import { Action } from 'redux';
 import { IPresetPreview } from 'src/components/Preset/IPresetPreview';
 import { ActionTypes } from './actionTypes';
 
-interface IAddPresetPreviewAction extends Action { preset: IPresetPreview };
-const addPreset = (preset: IPresetPreview): IAddPresetPreviewAction => {
+const addPreset = (preset: IPresetPreview) => {
   return { type: ActionTypes.AddPreset, preset };
 };
 
-interface IRemovePresetPreviewAction extends Action { presetId: string };
-const removePreset = (presetId: string): IRemovePresetPreviewAction => {
+const removePreset = (presetId: string) => {
   return { type: ActionTypes.RemovePreset, presetId };
 };
 
-export interface IPresetPreviewOwnProps {
+export interface IPresetPreviewActionPayload {
   preset: IPresetPreview;
   presetId: string;
 };
-export type IPresetPreviewAction = Action & IPresetPreviewOwnProps;
+export type IPresetPreviewAction = Action & IPresetPreviewActionPayload;
 export const presetPreviews = {
   add: addPreset,
   remove: removePreset
