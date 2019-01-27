@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { addPreset } from 'src/redux/actions/presetActions';
+import { AnyAction, Dispatch } from 'redux';
+import { presetPreviews, IPresetPreviewOwnProps } from 'src/redux/actions/presetActions';
 import { IState } from 'src/redux/state';
 import { IPresetExplorerState } from 'src/redux/state/IPresetExplorerState';
 import { Button } from '../common/Button';
@@ -39,7 +40,14 @@ function mapStateToProps(state: IState): IPresetExplorerState {
   return presets;
 }
 
+function mapDispatchToProps(dispatch: Dispatch<AnyAction>, ownProps: IPresetPreviewOwnProps) {
+  return {
+    onAddP: () => dispatch(presetPreviews.add(ownProps.preset)),
+    onRemove: () => dispatch(presetPreviews.remove(ownProps.presetId))
+  };
+}
+
 export default connect(
   mapStateToProps,
-  { addPreset }
+  mapDispatchToProps
 )(PresetExplorer);
