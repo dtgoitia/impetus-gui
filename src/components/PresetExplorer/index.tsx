@@ -7,6 +7,7 @@ import { IPresetExplorerState } from 'src/redux/state/IPresetExplorerState';
 import { Button } from '../common/Button';
 import { IPresetPreview } from '../Preset/IPresetPreview';
 import { PresetPreview } from './PresetPreview';
+import PresetPreviewForm from './PresetPreviewForm';
 
 type IPresetExplorerProps = IPresetExplorerState | any;
 
@@ -28,9 +29,10 @@ const PresetExplorer: React.FC<IPresetExplorerProps>
         <h1>PresetExplorer</h1>
         {generatetePresetList(props.presetPreviews)}
         <div className={'footer'}>
-          <Button text="ADD" callback={props.onAdd}/>
-          <Button text="REMOVE" callback={props.onRemove}/>
+          <Button text="ADD" callback={props.onShowAdd}/>
+          <Button text="REMOVE" callback={props.onShowRemove}/>
         </div>
+        <PresetPreviewForm submitAdd={props.onAdd} submitRemove={props.onRemove} />
       </div>
     );
   };
@@ -44,6 +46,10 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>)  {
   return {
     onAdd: (presetPreview: IPresetPreview) =>
       dispatch(presetPreviews.add(presetPreview)),
+    onShowAdd: () =>
+      dispatch(presetPreviews.showAdd()),
+    onShowRemove: () =>
+      dispatch(presetPreviews.showRemove()),
     onRemove: (presetId: string) =>
       dispatch(presetPreviews.remove(presetId)),
   };

@@ -6,6 +6,14 @@ const addPreset = (preset: IPresetPreview) => {
   return { type: ActionTypes.AddPreset, preset };
 };
 
+const showAddPreset = () => {
+  return { type: ActionTypes.ShowAddPreset };
+};
+
+const showRemovePreset = () => {
+  return { type: ActionTypes.ShowRemovePreset };
+};
+
 const removePreset = (presetId: string) => {
   return { type: ActionTypes.RemovePreset, presetId };
 };
@@ -17,5 +25,7 @@ export interface IPresetPreviewActionPayload {
 export type IPresetPreviewAction = Action & IPresetPreviewActionPayload;
 export const presetPreviews = {
   add: addPreset,
+  showAdd: showAddPreset,
+  showRemove: showRemovePreset,
   remove: removePreset
 };

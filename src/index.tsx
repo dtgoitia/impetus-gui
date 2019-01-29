@@ -5,12 +5,14 @@ import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'react-redux';
 import { createStore, Store } from 'redux';
-import { addTodo } from './redux/actions/todoActions';
 import mainReducer from './redux/reducers';  // which combines all the other reducers
 
 import App from './App';
 
-const store: Store = createStore(mainReducer);
+const store: Store = createStore(
+  mainReducer,
+  (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 ReactDOM.render(
   <Provider store={store}>
@@ -18,9 +20,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
-//tslint:disable
-console.log(store.getState());
-store.dispatch(addTodo('my first todo!'));
-console.log(store.getState());
 
 registerServiceWorker();
