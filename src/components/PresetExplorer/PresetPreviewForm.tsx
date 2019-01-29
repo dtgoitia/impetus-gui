@@ -1,9 +1,13 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { AnyAction, Dispatch } from 'redux';
+import { presetPreviews } from 'src/redux/actions/presetActions';
+import { IState } from 'src/redux/state';
 import { IPresetPreview } from '../Preset/IPresetPreview';
 
 import './PresetPreviewForm.css';
 
-interface IPreviewPresetFormState {
+interface IPresetPreviewFormState {
   activeTab: PresetPreviewFormTabs;
   id: string;
   name: string;
@@ -13,6 +17,7 @@ interface IPreviewPresetFormState {
 interface IPresetPreviewFormProps {
   submitAdd: (preset: IPresetPreview) => void;
   submitRemove: (presetId: string) => void;  // TODO
+  [x: string]: any;
 };
 
 export enum PresetPreviewFormTabs {
@@ -21,11 +26,11 @@ export enum PresetPreviewFormTabs {
   Remove = 2,
 }
 
-class PresetPreviewForm extends React.Component<IPresetPreviewFormProps, IPreviewPresetFormState> {
+class PresetPreviewForm extends React.Component<IPresetPreviewFormProps, IPresetPreviewFormState> {
   constructor(props: IPresetPreviewFormProps) {
     super(props);
     this.state = {
-      activeTab: PresetPreviewFormTabs.None,  // TODO: think where to hold this state (probably in redux store)
+      activeTab: this.props.activeTab ? this.props.activeTab : PresetPreviewFormTabs.None,
       id: '',
       name: '',
       summary: '',
@@ -110,4 +115,25 @@ class PresetPreviewForm extends React.Component<IPresetPreviewFormProps, IPrevie
   }
 }
 
-export default PresetPreviewForm;
+function mapStateToProps(state: IState) {
+  const { presets } = state;
+  return { activeTab: presets.activeFormTab };    // TODO: fix this mess
+}
+
+function mapDispatchToProps(dispatch: Dispatch<AnyAction>)  {
+  return {
+    onAdd: (presetPreview: IPresetPreview) =>
+      dispatch(presetPreviews.add(presetPreview)),
+    onShowAdd: () =>
+      dispatch(presetPreviews.showAdd()),
+    onShowRemove: () =>
+      dispatch(presetPreviews.showRemove()),
+    onRemove: (presetId: string) =>
+      dispatch(presetPreviews.remove(presetId)),
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PresetPreviewForm);

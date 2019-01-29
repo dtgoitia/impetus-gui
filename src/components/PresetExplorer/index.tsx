@@ -15,7 +15,7 @@ const generatetePresetList = (presets: IPresetPreview[]): JSX.Element[] => {
   if (presets === undefined) {
     return [<div key={0}>There are not presets</div>];
   }
-  return presets.map((preset: IPresetPreview, i: number): JSX.Element => {
+  return presets.map((preset: IPresetPreview): JSX.Element => {
     return <PresetPreview key={preset.id} preset={preset} />;
   });
 };
@@ -32,7 +32,7 @@ const PresetExplorer: React.FC<IPresetExplorerProps>
           <Button text="ADD" callback={props.onShowAdd}/>
           <Button text="REMOVE" callback={props.onShowRemove}/>
         </div>
-        <PresetPreviewForm submitAdd={props.onAdd} submitRemove={props.onRemove} />
+        <PresetPreviewForm />
       </div>
     );
   };
